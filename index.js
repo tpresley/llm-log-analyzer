@@ -9,7 +9,7 @@ const PROMPT = require('./prompt.js')
 const sampleLogs = require('./sampleLogs.js')
 
 async function analyzeLogs() {
-  const results = await makeLLMRequest(MODEL, API_KEY, PROMPT, sampleLogs)
+  const results = await makeLlmRequest(MODEL, API_KEY, PROMPT, sampleLogs)
   console.log(results)
 }
 
@@ -17,7 +17,11 @@ analyzeLogs().catch(error => {
   console.error('Error:', error);
 });
 
-async function makeLLMRequest(model, apiKey, prompt, logs, baseUrl=KINDO_API) {
+
+
+
+
+async function makeLlmRequest(model, apiKey, prompt, logs, baseUrl=KINDO_API) {
   const messages = [{role: "user", content: prompt + logs.join('\n')}];
   const data = {
     model,
@@ -93,8 +97,7 @@ async function makeLLMRequest(model, apiKey, prompt, logs, baseUrl=KINDO_API) {
   });
 }
 
-
-
+// extract text inside <output> tags (for reasoning models) or return the original text
 function extractOutputText(str) {
   // Use a regular expression to match text between <output> and </output> tags
   const regex = /<output>([\s\S]*?)<\/output>/g;
@@ -115,6 +118,7 @@ function extractOutputText(str) {
   return outputText;
 }
 
+// extract JSON from within markdown if it exists, otherwise return the original string
 function extractJsonFromMarkdown(str) {
   // Use a regular expression to match text between <output> and </output> tags
   const regex = /```json\n([\s\S]*?)\n```/g;
@@ -135,7 +139,8 @@ function extractJsonFromMarkdown(str) {
   return outputText.join(',\n');
 }
 
-
+// progress animation factory function
+// every call to the returned function increments the progress animation
 function createProgressAnimator() {
   const delay = 1
   const progressChars = ['-', '\\', '|', '/'];
