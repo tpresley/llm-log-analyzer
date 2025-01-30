@@ -5,3 +5,4 @@ data
 *.log
 !example_logs.log
 *.jsonl
+app_specs.txt
